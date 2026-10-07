@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server description="${project.name}">
+
+    <featureManager>
+        <feature>mpTelemetry</feature>
+        <feature>enterpriseBeansLite</feature>
+        <feature>messaging</feature>
+        <feature>mdb</feature>
+        <feature>beanValidation</feature>
+        <feature>jsonb</feature>
+        <feature>appSecurity</feature>
+    </featureManager>
+
+    <include optional="false" location="infrastructureConfig.xml"/>
+    <include optional="false" location="platforms.xml"/>
+
+    <httpEndpoint
+            id="defaultHttpEndpoint"
+            httpPort="${APP_PORT}"
+            host="*"
+            httpsPort="${APP_PORT_SECURE}">
+    </httpEndpoint>
+
+    <webApplication
+            location="${project.name}.war"
+            contextRoot="/">
+        <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party"/>
+    </webApplication>
+
+    <resourceAdapter
+            id="jms-resource-adapter-tag-active-mq-broker"
+            location="${server.config.dir}/lib/activemq-rar-${activemq.version}.rar">
+
+        <properties.jms-resource-adapter-tag-active-mq-broker
+                ServerUrl="${BROKER_URL}"
+                UserName="${BROKER_USER}"
+                Password="${BROKER_PASSWORD}"/>
+    </resourceAdapter>
+
+    <connectionManager
+            id="tagJmsConnectionManager"
+            maxPoolSize="30"
+            minPoolSize="4"/>
+
+    <jmsQueueConnectionFactory
+            jndiName="jms/connectionFactory/tag-active-mq-broker"
+            connectionManagerRef="tagJmsConnectionManager">
+
+        <properties.jms-resource-adapter-tag-active-mq-broker/>
+    </jmsQueueConnectionFactory>
+
+    <include optional="false" location="jmsQueueConfig.xml"/>
+
+</server>
