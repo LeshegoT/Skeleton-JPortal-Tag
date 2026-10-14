@@ -2,6 +2,7 @@ package za.co.sbg.tag.skeleton.app.boundary;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import za.co.sbg.tag.platform.messaging.lifecycle.bus.MessageBus;
 import za.co.sbg.tag.platform.messaging.lifecycle.processing.Handle;
@@ -23,6 +24,7 @@ public class IncomingJsonMessageHandler {
     MessageBus messageBus;
 
     @Handle
+    @Transactional
     public void handle(
             ContextualizedMessage<IncomingJsonMessageV1> contextualizedMessage) {
 

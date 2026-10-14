@@ -4,12 +4,15 @@
 
     <featureManager>
         <feature>mpTelemetry</feature>
+        <feature>mpOpenAPI</feature>
         <feature>enterpriseBeansLite</feature>
         <feature>messaging</feature>
         <feature>mdb</feature>
         <feature>beanValidation</feature>
         <feature>jsonb</feature>
         <feature>appSecurity</feature>
+        <feature>jdbc</feature>
+        <feature>mpJwt</feature>
     </featureManager>
 
     <include optional="false" location="infrastructureConfig.xml"/>
@@ -51,5 +54,35 @@
     </jmsQueueConnectionFactory>
 
     <include optional="false" location="jmsQueueConfig.xml"/>
+
+    <connectionManager
+            id="tagDataSourceConnectionManager"
+            maxPoolSize="30"
+            minPoolSize="2"
+            maxIdleTime="1m"
+            purgePolicy="ValidateAllConnections"/>
+
+    <dataSource
+            id="DefaultDataSource"
+            jndiName="jdbc/postgres"
+            type="javax.sql.XADataSource"
+            connectionManagerRef="tagDataSourceConnectionManager"
+            transactional="true">
+
+        <jdbcDriver libraryRef="PostgresLib"/>
+
+        <properties.postgresql
+                databaseName="${DB_NAME}"
+                serverName="${DB_HOST}"
+                portNumber="${DB_PORT}"
+                user="${DB_USER}"
+                password="${DB_PASSWORD}"
+                currentSchema="${defaultSchema}"
+                applicationName="${project.name}"/>
+    </dataSource>
+
+    <library id="PostgresLib">
+        <file name="${server.config.dir}/lib/postgresql-jar-${postgres.version}.jar"/>
+    </library>
 
 </server>

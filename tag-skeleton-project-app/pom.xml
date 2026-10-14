@@ -19,6 +19,10 @@
     <properties>
         <!-- TAG Messages -->
         <tag.skeleton.project.messages.version>1.0.0-SNAPSHOT</tag.skeleton.project.messages.version>
+
+        <!-- JPortal -->
+        <jportal2.package>za/co/sbg/tag/skeleton/app/entity/anydb</jportal2.package>
+
         <beanio.version>2.1.0</beanio.version>
         <imagename>tag-skeleton-project</imagename>
     </properties>
@@ -38,6 +42,14 @@
         <!-- TAG Platform -->
         <dependency>
             <groupId>za.co.sbg.tag</groupId>
+            <artifactId>tag-platform-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>za.co.sbg.tag</groupId>
+            <artifactId>tag-platform-persistence-jportal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>za.co.sbg.tag</groupId>
             <artifactId>tag-platform-messaging-activemq-jms</artifactId>
         </dependency>
         <dependency>
@@ -52,6 +64,10 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>4.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>za.co.bbd</groupId>
+            <artifactId>jportal2-utilities</artifactId>
         </dependency>
 
         <dependency>
@@ -69,6 +85,12 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>za.co.bbd</groupId>
+                <artifactId>jportal2-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
 </project>

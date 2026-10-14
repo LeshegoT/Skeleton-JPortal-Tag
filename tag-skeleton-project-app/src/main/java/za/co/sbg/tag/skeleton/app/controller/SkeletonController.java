@@ -1,6 +1,7 @@
 package za.co.sbg.tag.skeleton.app.controller;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.mapstruct.factory.Mappers;
 import za.co.sbg.tag.skeleton.messages.commands.IncomingFixedLengthDelimitedMessageV1;
 import za.co.sbg.tag.skeleton.messages.commands.IncomingJsonMessageV1;
@@ -15,24 +16,34 @@ public class SkeletonController {
     private final SkeletonMapper mapper =
             Mappers.getMapper(SkeletonMapper.class);
 
+    @Inject
+    SkeletonService skeletonService;
+
     public OutgoingXmlMessageV1 processJson(
             IncomingJsonMessageV1 incoming,
             String countryIso) {
 
         validate(incoming.getRandom());
 
+        skeletonService.saveOrUpdate(
+                incoming.getName(),
+                incoming.getDate());
+
+        IncomingJsonMessageV1 messageToMap = incoming;
+
         if ("USA".equalsIgnoreCase(countryIso)
                 && incoming.getDate() != null) {
 
-            incoming.setDate(
-                    incoming.getDate()
-                            .withZoneSameInstant(
-                                    ZoneId.of("America/New_York")
-                            )
-            );
+            messageToMap = IncomingJsonMessageV1.builder()
+                    .reference(incoming.getReference())
+                    .name(incoming.getName())
+                    .date(incoming.getDate().withZoneSameInstant(
+                            ZoneId.of("America/New_York")))
+                    .random(incoming.getRandom())
+                    .build();
         }
 
-        return mapper.toOutgoingXml(incoming);
+        return mapper.toOutgoingXml(messageToMap);
     }
 
     public OutgoingTextMessageV1 processFixedLength(

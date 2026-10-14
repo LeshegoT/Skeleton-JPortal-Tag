@@ -1,0 +1,73 @@
+DATABASE    SkeletonDB
+PACKAGE     za.co.sbg.tag.skeleton.app.entity.anydb
+OUTPUT      Skeleton
+SERVER      PostgeSQL95
+
+TABLE Skeleton
+    Id                  BIGSEQUENCE
+    Name                CHAR(255)
+    IsUpdated           BOOLEAN
+    LastUpdatedDate     DATETIME
+
+KEY PKEY PRIMARY Id
+
+PROC INSERT RETURNING
+
+PROC SelectAll
+
+PROC SelectByName
+    INPUT
+        Name                =
+    OUTPUT (SINGLE)
+        Id                  =
+        Name                =
+        IsUpdated           =
+        LastUpdatedDate     =
+    SQLCODE
+        SELECT
+            Id,
+            Name,
+            IsUpdated,
+            LastUpdatedDate
+        FROM Skeleton
+        WHERE Name = :Name
+    ENDCODE
+
+PROC LoadNamesByIsUpdated
+    INPUT
+        IsUpdated           =
+    OUTPUT
+        Id                  =
+        Name                =
+        IsUpdated           =
+        LastUpdatedDate     =
+    SQLCODE
+        SELECT
+            Id,
+            Name,
+            IsUpdated,
+            LastUpdatedDate
+        FROM Skeleton
+        WHERE IsUpdated = :IsUpdated
+    ENDCODE
+
+PROC UpdateNameByName
+    INPUT
+        Name                =
+        IsUpdated           =
+        LastUpdatedDate     =
+    SQLCODE
+        UPDATE Skeleton
+        SET
+            IsUpdated = :IsUpdated,
+            LastUpdatedDate = :LastUpdatedDate
+        WHERE Name = :Name
+    ENDCODE
+
+PROC DeleteByName
+    INPUT
+        Name                =
+    SQLCODE
+        DELETE FROM Skeleton
+        WHERE Name = :Name
+    ENDCODE
